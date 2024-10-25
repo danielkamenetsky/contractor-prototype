@@ -1,0 +1,19 @@
+{
+  "name": "contractor-prototype",
+  "version": "1.0.0",
+  "description": "MERN prototype for contractor application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielkamenetsky/contractor-prototype.git"
+  },
+  "author": "Daniel Kamenetsky",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danielkamenetsky/contractor-prototype/issues"
+  },
+  "homepage": "https://github.com/danielkamenetsky/contractor-prototype#readme"
+}
