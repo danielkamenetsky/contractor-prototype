@@ -54,6 +54,19 @@ const App = () => {
         setNewRoadName('')
       })
   }
+
+  // Add this new function
+  const deleteWorkOrder = (id) => {
+    if (window.confirm(`Delete work order ${id}?`)) {
+      workOrderService
+        .remove(id)
+        .then(() => {
+          // Filter out the deleted work order
+          setWorkOrders(workOrders.filter(wo => wo.id !== id))
+        })
+    }
+  }
+
   return (
     <div>
       <h1>Work Orders</h1>
@@ -100,6 +113,10 @@ const App = () => {
       {workOrders.map(wo => (
         <div key={wo.wo}>
           {wo.wo} - {wo.municipality} - {wo.rin} - {wo.roadside} - {wo.roadName}
+          {/* Add delete button */}
+          <button onClick={() => deleteWorkOrder(wo.id)}>
+            delete
+          </button>
         </div>
       ))}
     </div>
