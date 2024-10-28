@@ -1,7 +1,7 @@
 const express = require('express')
 
 const app = express()
-
+app.use(express.json())
 let workOrders = [
     {
         id: 1,
@@ -49,6 +49,40 @@ app.get('/api/workorders/:id', (req, res) => {
         // since no data we use status method for setting the status and end for responding to request without sending any data
         res.status(404).end()
     }
+})
+
+// Deleting a note by filtering by all id's except the note
+app.delete('api/workorders/:id', (req, res) => {
+    const id = req.params.id
+    workOrders = workOrders.filter(workorder => workorder.id !== id)
+    res.status(204).end()
+})
+
+const generateId = () => {
+    const maxId = workOrders.length > 0 ? Math.max(...workOrders.map(n => Number(n.id))) : 0
+    return String(maxId + 1)
+}
+// Post
+app.post('/api/workorders', (req, res) => {
+    const body = req.body
+
+    if (!body.wo || !body.municipality) {  // Changed validation
+        return res.status(400).json({
+            error: 'work order number and municipality are required'
+        })
+    }
+
+    const workorder = {
+        id: generateId(),    // Auto-generate the id
+        wo: body.wo,         // Get actual work order number from request
+        municipality: body.municipality || "Not Entered",
+        rin: body.rin || "Not Entered",
+        roadside: body.roadside || "Not Entered",
+        address: body.address || "Not Entered",
+        roadName: body.roadName
+    }
+    workOrders = workOrders.concat(workOrders)
+    res.json(workOrders)
 })
 
 const PORT = 3001
