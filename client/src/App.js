@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-
+import Notification from './components/Notification'
 import workOrderService from './services/workOrderService'
 
 
@@ -7,7 +7,8 @@ const App = () => {
   // State to store work orders, initially an empty array
   // workOrders stores the data, setWorkOrders is the function to update the data
   const [workOrders, setWorkOrders] = useState([])
-
+  const [notification, setNotification] = useState(null)
+  const [notificationType, setNotificationType] = useState('success')
   // State for form inputs
   const [newWo, setNewWo] = useState('')
   const [newMunicipality, setNewMunicipality] = useState('')
@@ -29,6 +30,24 @@ const App = () => {
   }, []) // Only do this when page first loads
 
 
+  // This function shows messages to the user (like "Work order added!" or "Error!")
+  const showNotification = (message, type = 'success') => {
+    // Put the message in our notification box
+    setNotification(message)
+
+    // Set if it's a good message (green) or bad message (red)
+    // If we don't specify type, it defaults to 'success' (green)
+    setNotificationType(type)
+
+    // Make the message disappear after 5 seconds (5000 milliseconds)
+    setTimeout(() => {
+      // Clear the message by setting it back to null
+      setNotification(null)
+    }, 5000)
+  }
+
+
+
   const addWorkOrder = (event) => {
     event.preventDefault()
 
@@ -46,12 +65,16 @@ const App = () => {
       .then(response => {
         console.log('Response from backend:', response.data) // See what we get back
         setWorkOrders(workOrders.concat(response.data))
+        showNotification(`Added work order ${response.data.wo}`)
         // Clear form
         setNewWo('')
         setNewMunicipality('')
         setNewRin('')
         setNewRoadside('')
         setNewRoadName('')
+      })
+      .catch(error => {
+        showNotification('Failed to add work order', 'error') // Add this
       })
   }
 
@@ -63,6 +86,10 @@ const App = () => {
         .then(() => {
           // Filter out the deleted work order
           setWorkOrders(workOrders.filter(wo => wo.id !== id))
+          showNotification('Work order deleted successfully')
+        })
+        .catch(error => {
+          showNotification('Failed to delete work order', 'error')
         })
     }
   }
@@ -70,6 +97,8 @@ const App = () => {
   return (
     <div>
       <h1>Work Orders</h1>
+      {/* Add the Notification component here */}
+      <Notification message={notification} type={notificationType} />
 
       <form onSubmit={addWorkOrder}>
         <div>
