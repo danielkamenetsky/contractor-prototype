@@ -2,6 +2,19 @@ const express = require('express')
 
 const app = express()
 app.use(express.json())
+
+
+// Shows requests coming in 
+const requestLogger = (req, res, next) => {
+    console.log('Method: ', req.method) // GET, POST, etc
+    console.log('Path', req.path); // /api/workorders, etc
+    console.log('Body: ', req.body); // Data sent in request
+    console.log('---');
+    next() //  Move to next middleware/route
+}
+
+app.use(requestLogger)
+
 let workOrders = [
     {
         id: 1,
@@ -52,7 +65,7 @@ app.get('/api/workorders/:id', (req, res) => {
 })
 
 // Deleting a note by filtering by all id's except the note
-app.delete('api/workorders/:id', (req, res) => {
+app.delete('/api/workorders/:id', (req, res) => {
     const id = req.params.id
     workOrders = workOrders.filter(workorder => workorder.id !== id)
     res.status(204).end()
@@ -65,6 +78,8 @@ const generateId = () => {
 // Post
 app.post('/api/workorders', (req, res) => {
     const body = req.body
+    console.log('Received request body:', body)  // See what backend receives
+
 
     if (!body.wo || !body.municipality) {  // Changed validation
         return res.status(400).json({
@@ -72,7 +87,7 @@ app.post('/api/workorders', (req, res) => {
         })
     }
 
-    const workorder = {
+    const workOrder = {
         id: generateId(),    // Auto-generate the id
         wo: body.wo,         // Get actual work order number from request
         municipality: body.municipality || "Not Entered",
@@ -81,10 +96,32 @@ app.post('/api/workorders', (req, res) => {
         address: body.address || "Not Entered",
         roadName: body.roadName
     }
-    workOrders = workOrders.concat(workOrders)
-    res.json(workOrders)
+    console.log('Created work order:', workOrder)  // See what backend creates
+
+    workOrders = workOrders.concat(workOrder)
+    res.json(workOrder)
 })
 
+
+// Handles when someone tries to a visit a route that doesn't exist 
+const unknownEndpoint = (req, res) => {
+    res.status(404).send({ error: 'unknown endpoint' })
+}
+app.use(unknownEndpoint)
+
+// Catches errors
+const errorHandler = (error, req, res, next) => {
+    console.log(error.message);
+    // Different types of errors get different responses
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+
+    next(error)
+}
+app.use(errorHandler)
+
 const PORT = 3001
-app.listen(PORT)
-console.log(`Server running on port ${PORT}`);
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+})
