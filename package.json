@@ -19,7 +19,10 @@
   },
   "homepage": "https://github.com/danielkamenetsky/contractor-prototype#readme",
   "dependencies": {
-    "express": "^4.21.1"
+    "contractor-prototype": "file:",
+    "express": "^4.21.1",
+    "mongodb": "^6.10.0",
+    "mongoose": "^8.7.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"

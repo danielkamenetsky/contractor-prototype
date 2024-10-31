@@ -9,7 +9,6 @@ const getAll = () => {
 }
 
 // Taking a new work order object and sending it to the backend
-
 const create = newObject => {
     return axios.post(baseUrl, newObject)
 }
