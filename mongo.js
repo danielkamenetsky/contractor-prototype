@@ -6,28 +6,35 @@ if (process.argv.length < 3) {
 }
 
 const password = process.argv[2]
-const name = process.argv[3]
-const number = process.argv[4]
 
-const url = `mongodb+srv://danielkamenetsky:${password}@cluster0.gq2rb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+const url = `mongodb+srv://dan:${password}@cluster0.o3wgy.mongodb.net/workorder?retryWrites=true&w=majority&appName=Cluster0`
 
 mongoose.set('strictQuery', false)
 
+// Add error handling to connection
 mongoose.connect(url)
+    .then(() => {
+        console.log('Connected to MongoDB!')
 
-const noteSchema = new mongoose.Schema({
-    name: String,
-    number: String,
-})
+        const noteSchema = new mongoose.Schema({
+            content: String,
+            important: Boolean,
+        })
 
-const Note = mongoose.model('Note', noteSchema)
+        const Note = mongoose.model('Note', noteSchema)
 
-const note = new Note({
-    name: 'HTML is easy!!',
-    number: '1234',
-})
+        const note = new Note({
+            content: 'HTML is easy',
+            important: true,
+        })
 
-note.save().then(result => {
-    console.log('note saved!!')
-    mongoose.connection.close()
-})
+        return note.save()
+    })
+    .then(result => {
+        console.log('Note saved!', result)  // This will show the saved document
+        mongoose.connection.close()
+    })
+    .catch(error => {
+        console.error('Error:', error)
+        mongoose.connection.close()
+    })
