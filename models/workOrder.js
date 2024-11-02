@@ -3,17 +3,14 @@ const mongoose = require('mongoose')
 const workOrderSchema = new mongoose.Schema({
     wo: {
         type: Number,
-        required: true
+        required: true,
+        unique: true
     },
     municipality: {
         type: String,
         required: true
     },
     rin: {
-        type: String,
-        default: "Not Entered"
-    },
-    roadside: {
         type: String,
         default: "Not Entered"
     },
@@ -34,7 +31,7 @@ workOrderSchema.set('toJSON', {
     transform: (document, returnedObject) => {
         // Create a new 'id' property using the MongoDB _id
         // toString() converts MongoDB's ObjectId to a regular string
-        returnedObject.id = returnedObject._id.toString()
+        returnedObject.id = returnedObject.wo
 
         // Remove the _id field from the response
         delete returnedObject._id

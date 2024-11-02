@@ -1,7 +1,26 @@
+require('dotenv').config()
 const express = require('express')
+const mongoose = require('mongoose')
+const WorkOrder = require('./models/workOrder')
+
 
 const app = express()
 app.use(express.json())
+
+// MongoDB connection
+mongoose.set('strictQuery', false)
+const url = process.env.MONGODB_URI
+console.log('connecting to', url)
+
+mongoose.connect(url)
+    .then(() => {
+        console.log('connected to MongoDB')
+    })
+    .catch((error) => {
+        console.log('error connecting to MongoDB: ', error.message);
+    })
+
+
 
 
 // Shows requests coming in 
@@ -15,93 +34,75 @@ const requestLogger = (req, res, next) => {
 
 app.use(requestLogger)
 
-let workOrders = [
-    {
-        id: 1,
-        wo: 343064,
-        municipality: "East Gwillimbury",
-        rin: "67-36",
-        roadside: "West",
-        address: "Not Entered",
-        roadName: "McCowan Road"
-    },
-    {
-        id: 2,
-        wo: 343065,
-        municipality: "East Gwillimbury",
-        rin: "67-37",
-        roadside: "East",
-        address: "123 McCowan Road",
-        roadName: "McCowan Road"
-    },
-    {
-        id: 3,
-        wo: 343066,
-        municipality: "Markham",
-        rin: "45-22",
-        roadside: "North",
-        address: "Not Entered",
-        roadName: "16th Avenue"
-    }
-]
-
-
+// Fetch all workorders
 app.get('/api/workorders', (req, res) => {
-    res.json(workOrders)
+    WorkOrder.find({}).then(workOrders => {
+        res.json(workOrders)
+    })
 })
 
-// Fetching a single work order
 
-// Handles all HTTP GET requests of the form api/workorders/SOMETHING
-app.get('/api/workorders/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const workorder = workOrders.find(workorder => workorder.id === id)
-    if (workorder) {
-        res.json(workorder)
-    } else {
-        // since no data we use status method for setting the status and end for responding to request without sending any data
-        res.status(404).end()
-    }
+app.get('/api/workorders/:wo', (req, res, next) => {
+    const workOrderNumber = Number(req.params.wo)
+    console.log('Looking for WO:', workOrderNumber)  // See what number we're looking for
+
+    WorkOrder.findOne({ wo: workOrderNumber })
+        .then(workOrder => {
+            console.log('Found workOrder:', workOrder)  // See what we found (if anything)
+            if (workOrder) {
+                res.json(workOrder)
+            } else {
+                res.status(404).end()
+            }
+        })
+        .catch(error => next(error))
 })
+
+
 
 // Deleting a note by filtering by all id's except the note
-app.delete('/api/workorders/:id', (req, res) => {
-    const id = req.params.id
-    workOrders = workOrders.filter(workorder => workorder.id !== id)
-    res.status(204).end()
+app.delete('/api/workorders/:wo', (req, res, next) => {
+    WorkOrder.findOneAndDelete({ wo: req.params.wo })
+        .then(() => {
+            res.status(204).end()
+        })
+        .catch(error => next(error))
 })
 
-const generateId = () => {
-    const maxId = workOrders.length > 0 ? Math.max(...workOrders.map(n => Number(n.id))) : 0
-    return String(maxId + 1)
-}
+
 // Post
-app.post('/api/workorders', (req, res) => {
+app.post('/api/workorders', (req, res, next) => {
+    console.log('1. Got request');
     const body = req.body
-    console.log('Received request body:', body)  // See what backend receives
+    console.log('2. Request body:', body);
 
-
-    if (!body.wo || !body.municipality) {  // Changed validation
+    if (!body.wo || !body.municipality) {
         return res.status(400).json({
             error: 'work order number and municipality are required'
         })
     }
 
-    const workOrder = {
-        id: generateId(),    // Auto-generate the id
-        wo: body.wo,         // Get actual work order number from request
-        municipality: body.municipality || "Not Entered",
+    console.log('3. Creating new WorkOrder');
+    const workOrder = new WorkOrder({
+        wo: body.wo,
+        municipality: body.municipality,
         rin: body.rin || "Not Entered",
         roadside: body.roadside || "Not Entered",
         address: body.address || "Not Entered",
-        roadName: body.roadName
-    }
-    console.log('Created work order:', workOrder)  // See what backend creates
+        roadName: body.roadName || "Not Entered"
+    })
+    console.log('4. WorkOrder instance:', workOrder);
 
-    workOrders = workOrders.concat(workOrder)
-    res.json(workOrder)
+    workOrder.save()
+        .then(savedWorkOrder => {
+            console.log('5. Saved successfully:', savedWorkOrder);
+            res.json(savedWorkOrder)
+        })
+        .catch(error => {
+            console.log('5. Error saving:', error);
+            next(error)
+        })
 })
-
 
 // Handles when someone tries to a visit a route that doesn't exist 
 const unknownEndpoint = (req, res) => {
