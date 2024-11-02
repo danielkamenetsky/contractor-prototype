@@ -14,8 +14,8 @@ const create = newObject => {
 }
 
 // Add new delete function
-const remove = (id) => {
-    return axios.delete(`${baseUrl}/${id}`)
+const remove = (wo) => {
+    return axios.delete(`${baseUrl}/${wo}`)
 }
 
 export default { getAll, create, remove }

@@ -79,14 +79,14 @@ const App = () => {
   }
 
   // Add this new function
-  const deleteWorkOrder = (id) => {
-    if (window.confirm(`Delete work order ${id}?`)) {
+  const deleteWorkOrder = (wo) => {
+    if (window.confirm(`Delete work order ${wo}?`)) {
       workOrderService
-        .remove(id)
+        .remove(wo)
         .then(() => {
           // Filter out the deleted work order
-          setWorkOrders(workOrders.filter(wo => wo.id !== id))
-          showNotification('Work order deleted successfully')
+          setWorkOrders(workOrders.filter(workOrder => workOrder.wo !== wo))
+          showNotification(`Work order ${wo} deleted successfully`)
         })
         .catch(error => {
           showNotification('Failed to delete work order', 'error')
@@ -143,7 +143,7 @@ const App = () => {
         <div key={wo.wo}>
           {wo.wo} - {wo.municipality} - {wo.rin} - {wo.roadside} - {wo.roadName}
           {/* Add delete button */}
-          <button onClick={() => deleteWorkOrder(wo.id)}>
+          <button onClick={() => deleteWorkOrder(wo.wo)}>
             delete
           </button>
         </div>
