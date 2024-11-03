@@ -1,64 +1,79 @@
-// src/components/WorkOrderForm.js
+// contractor-prototype/client/src/components/WorkOrderForm.js
 import React from 'react'
+import {
+    TextField,
+    Button,
+    Box,
+    Paper,
+    Typography,
+    Stack
+} from '@mui/material'
 
-// This component receives all the form-related props from App.js:
-// - Form submission function
-// - Values for each input
-// - Functions to update each input
 const WorkOrderForm = ({
-    addWorkOrder,         // Function that handles form submission
-    newWo,               // Work order number value
-    setNewWo,            // Function to update work order number
-    newMunicipality,     // Municipality value
-    setNewMunicipality,  // Function to update municipality
-    newRin,              // RIN value
-    setNewRin,           // Function to update RIN
-    newRoadside,         // Roadside value
-    setNewRoadside,      // Function to update roadside
-    newRoadName,         // Road name value
-    setNewRoadName       // Function to update road name
+    addWorkOrder,
+    newWo,
+    setNewWo,
+    newMunicipality,
+    setNewMunicipality,
+    newRin,
+    setNewRin,
+    newRoadside,
+    setNewRoadside,
+    newRoadName,
+    setNewRoadName
 }) => {
     return (
-        // Form element that calls addWorkOrder when submitted
-        <form onSubmit={addWorkOrder}>
-            {/* Each div contains a label and input field */}
-            <div>
-                Work Order Number:
-                <input
-                    value={newWo}
-                    onChange={(event) => setNewWo(event.target.value)}
-                />
-            </div>
-            <div>
-                Municipality:
-                <input
-                    value={newMunicipality}
-                    onChange={(event) => setNewMunicipality(event.target.value)}
-                />
-            </div>
-            <div>
-                RIN:
-                <input
-                    value={newRin}
-                    onChange={(event) => setNewRin(event.target.value)}
-                />
-            </div>
-            <div>
-                Roadside:
-                <input
-                    value={newRoadside}
-                    onChange={(event) => setNewRoadside(event.target.value)}
-                />
-            </div>
-            <div>
-                Road Name:
-                <input
-                    value={newRoadName}
-                    onChange={(event) => setNewRoadName(event.target.value)}
-                />
-            </div>
-            <button type="submit">add</button>
-        </form>
+        <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+            <Typography variant="h6" gutterBottom>
+                Add New Work Order
+            </Typography>
+            <Box component="form" onSubmit={addWorkOrder}>
+                <Stack spacing={2}>
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                        <TextField
+                            fullWidth
+                            label="Work Order Number"
+                            value={newWo}
+                            onChange={(e) => setNewWo(e.target.value)}
+                        />
+                        <TextField
+                            fullWidth
+                            label="Municipality"
+                            value={newMunicipality}
+                            onChange={(e) => setNewMunicipality(e.target.value)}
+                        />
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                        <TextField
+                            fullWidth
+                            label="RIN"
+                            value={newRin}
+                            onChange={(e) => setNewRin(e.target.value)}
+                        />
+                        <TextField
+                            fullWidth
+                            label="Roadside"
+                            value={newRoadside}
+                            onChange={(e) => setNewRoadside(e.target.value)}
+                        />
+                    </Box>
+                    <TextField
+                        fullWidth
+                        label="Road Name"
+                        value={newRoadName}
+                        onChange={(e) => setNewRoadName(e.target.value)}
+                    />
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        sx={{ mt: 1 }}
+                    >
+                        Add Work Order
+                    </Button>
+                </Stack>
+            </Box>
+        </Paper>
     )
 }
 
