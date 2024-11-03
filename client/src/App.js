@@ -3,6 +3,10 @@ import Notification from './components/Notification'
 import workOrderService from './services/workOrderService'
 import WorkOrderTable from './components/WorkOrderTable'
 import WorkOrderForm from './components/WorkOrderForm'
+import { createTheme, ThemeProvider } from '@mui/material/styles'  // Note: from /styles
+import CssBaseline from '@mui/material/CssBaseline'
+
+const theme = createTheme()
 
 const App = () => {
   // State to store work orders, initially an empty array
@@ -96,29 +100,32 @@ const App = () => {
   }
 
   return (
-    <div>
-      <h1>Work Orders</h1>
-      {/* Add the Notification component here */}
-      <Notification message={notification} type={notificationType} />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <div>
+        <h1>Work Orders</h1>
+        {/* Add the Notification component here */}
+        <Notification message={notification} type={notificationType} />
 
-      <WorkOrderForm
-        addWorkOrder={addWorkOrder}
-        newWo={newWo}
-        setNewWo={setNewWo}
-        newMunicipality={newMunicipality}
-        setNewMunicipality={setNewMunicipality}
-        newRin={newRin}
-        setNewRin={setNewRin}
-        newRoadside={newRoadside}
-        setNewRoadside={setNewRoadside}
-        newRoadName={newRoadName}
-        setNewRoadName={setNewRoadName}
-      />
-      <WorkOrderTable
-        workOrders={workOrders}
-        deleteWorkOrder={deleteWorkOrder}
-      />
-    </div>
+        <WorkOrderForm
+          addWorkOrder={addWorkOrder}
+          newWo={newWo}
+          setNewWo={setNewWo}
+          newMunicipality={newMunicipality}
+          setNewMunicipality={setNewMunicipality}
+          newRin={newRin}
+          setNewRin={setNewRin}
+          newRoadside={newRoadside}
+          setNewRoadside={setNewRoadside}
+          newRoadName={newRoadName}
+          setNewRoadName={setNewRoadName}
+        />
+        <WorkOrderTable
+          workOrders={workOrders}
+          deleteWorkOrder={deleteWorkOrder}
+        />
+      </div>
+    </ThemeProvider>
   )
 }
 
