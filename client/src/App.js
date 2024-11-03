@@ -3,11 +3,9 @@ import Notification from './components/Notification'
 import workOrderService from './services/workOrderService'
 import WorkOrderTable from './components/WorkOrderTable'
 import WorkOrderForm from './components/WorkOrderForm'
-import { createTheme, ThemeProvider } from '@mui/material/styles'  // Note: from /styles
-import CssBaseline from '@mui/material/CssBaseline'
+import { Container, Typography, Box } from '@mui/material';
 
-const theme = createTheme()
-
+import Sidebar from './components/Sidebar';  // Assume Sidebar uses MUI Drawer as discussed
 const App = () => {
   // State to store work orders, initially an empty array
   // workOrders stores the data, setWorkOrders is the function to update the data
@@ -100,13 +98,14 @@ const App = () => {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <div>
-        <h1>Work Orders</h1>
-        {/* Add the Notification component here */}
-        <Notification message={notification} type={notificationType} />
+    <Box sx={{ display: 'flex' }}>
+      <Sidebar />
+      <Container sx={{ flexGrow: 1, p: 0 }}>
+        <Typography variant="h4" gutterBottom sx={{ color: 'blue', backgroundColor: 'white', padding: '5px' }}>
+          Work Orders
+        </Typography>
 
+        <Notification message={notification} type={notificationType} />
         <WorkOrderForm
           addWorkOrder={addWorkOrder}
           newWo={newWo}
@@ -124,9 +123,9 @@ const App = () => {
           workOrders={workOrders}
           deleteWorkOrder={deleteWorkOrder}
         />
-      </div>
-    </ThemeProvider>
-  )
+      </Container>
+    </Box>
+  );
 }
 
-export default App
+export default App;

@@ -1,6 +1,6 @@
 // contractor-prototype/client/src/components/WorkOrderTable.js
 import React from 'react'
-// Add Material UI imports
+import DeleteIcon from '@mui/icons-material/Delete'  // Add this import
 import {
     Table,
     TableBody,
@@ -8,7 +8,8 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Paper
+    Paper,
+    Button
 } from '@mui/material'
 
 const WorkOrderTable = ({ workOrders, deleteWorkOrder }) => {
@@ -34,9 +35,14 @@ const WorkOrderTable = ({ workOrders, deleteWorkOrder }) => {
                             <TableCell>{wo.roadside}</TableCell>
                             <TableCell>{wo.roadName}</TableCell>
                             <TableCell>
-                                <button onClick={() => deleteWorkOrder(wo.wo)}>
-                                    delete
-                                </button>
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    start={<DeleteIcon />}
+                                    onClick={() => deleteWorkOrder(wo.wo)}
+                                >
+                                    Delete
+                                </Button>
                             </TableCell>
                         </TableRow>
                     ))}
