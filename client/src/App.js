@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import Notification from './components/Notification'
 import workOrderService from './services/workOrderService'
-
+import WorkOrderTable from './components/WorkOrderTable'
+import WorkOrderForm from './components/WorkOrderForm'
 
 const App = () => {
   // State to store work orders, initially an empty array
@@ -100,54 +101,23 @@ const App = () => {
       {/* Add the Notification component here */}
       <Notification message={notification} type={notificationType} />
 
-      <form onSubmit={addWorkOrder}>
-        <div>
-          Work Order Number:
-          <input
-            value={newWo}
-            onChange={(event) => setNewWo(event.target.value)}
-          />
-        </div>
-        <div>
-          Municipality:
-          <input
-            value={newMunicipality}
-            onChange={(event) => setNewMunicipality(event.target.value)}
-          />
-        </div>
-        <div>
-          RIN:
-          <input
-            value={newRin}
-            onChange={(event) => setNewRin(event.target.value)}
-          />
-        </div>
-        <div>
-          Roadside:
-          <input
-            value={newRoadside}
-            onChange={(event) => setNewRoadside(event.target.value)}
-          />
-        </div>
-        <div>
-          Road Name:
-          <input
-            value={newRoadName}
-            onChange={(event) => setNewRoadName(event.target.value)}
-          />
-        </div>
-        <button type="submit">add</button>
-      </form>
-
-      {workOrders.map(wo => (
-        <div key={wo.wo}>
-          {wo.wo} - {wo.municipality} - {wo.rin} - {wo.roadside} - {wo.roadName}
-          {/* Add delete button */}
-          <button onClick={() => deleteWorkOrder(wo.wo)}>
-            delete
-          </button>
-        </div>
-      ))}
+      <WorkOrderForm
+        addWorkOrder={addWorkOrder}
+        newWo={newWo}
+        setNewWo={setNewWo}
+        newMunicipality={newMunicipality}
+        setNewMunicipality={setNewMunicipality}
+        newRin={newRin}
+        setNewRin={setNewRin}
+        newRoadside={newRoadside}
+        setNewRoadside={setNewRoadside}
+        newRoadName={newRoadName}
+        setNewRoadName={setNewRoadName}
+      />
+      <WorkOrderTable
+        workOrders={workOrders}
+        deleteWorkOrder={deleteWorkOrder}
+      />
     </div>
   )
 }
