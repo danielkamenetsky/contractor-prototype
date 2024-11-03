@@ -1,14 +1,22 @@
-// src/components/Notification.js
+// client/src/components/Notification.js
+import { Alert, Snackbar } from '@mui/material';
+
 const Notification = ({ message, type }) => {
     if (message === null) {
-        return null
+        return null;
     }
 
     return (
-        <div className={`notification ${type}`}>
-            {message}
-        </div>
-    )
-}
+        <Snackbar
+            open={!!message}
+            autoHideDuration={6000}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+            <Alert severity={type} elevation={6} variant="filled">
+                {message}
+            </Alert>
+        </Snackbar>
+    );
+};
 
-export default Notification
+export default Notification;

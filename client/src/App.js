@@ -3,7 +3,7 @@ import Notification from './components/Notification'
 import workOrderService from './services/workOrderService'
 import WorkOrderTable from './components/WorkOrderTable'
 import WorkOrderForm from './components/WorkOrderForm'
-import { Container, Typography, Box } from '@mui/material';
+import { Box, AppBar, Toolbar, Typography, Container } from '@mui/material';
 
 import Sidebar from './components/Sidebar';  // Assume Sidebar uses MUI Drawer as discussed
 const App = () => {
@@ -97,33 +97,40 @@ const App = () => {
     }
   }
 
+  // client/src/App.js
   return (
     <Box sx={{ display: 'flex' }}>
       <Sidebar />
-      <Container sx={{ flexGrow: 1, p: 0 }}>
-        <Typography variant="h4" gutterBottom sx={{ color: 'blue', backgroundColor: 'white', padding: '5px' }}>
-          Work Orders
-        </Typography>
-
-        <Notification message={notification} type={notificationType} />
-        <WorkOrderForm
-          addWorkOrder={addWorkOrder}
-          newWo={newWo}
-          setNewWo={setNewWo}
-          newMunicipality={newMunicipality}
-          setNewMunicipality={setNewMunicipality}
-          newRin={newRin}
-          setNewRin={setNewRin}
-          newRoadside={newRoadside}
-          setNewRoadside={setNewRoadside}
-          newRoadName={newRoadName}
-          setNewRoadName={setNewRoadName}
-        />
-        <WorkOrderTable
-          workOrders={workOrders}
-          deleteWorkOrder={deleteWorkOrder}
-        />
-      </Container>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static" sx={{ mb: 3 }}>
+          <Toolbar>
+            <Typography variant="h5" component="h1">
+              Work Order Management
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        {/* Remove the margin-left from Container and adjust width */}
+        <Container sx={{ p: 3 }}> {/* Just use padding */}
+          <Notification message={notification} type={notificationType} />
+          <WorkOrderForm
+            addWorkOrder={addWorkOrder}
+            newWo={newWo}
+            setNewWo={setNewWo}
+            newMunicipality={newMunicipality}
+            setNewMunicipality={setNewMunicipality}
+            newRin={newRin}
+            setNewRin={setNewRin}
+            newRoadside={newRoadside}
+            setNewRoadside={setNewRoadside}
+            newRoadName={newRoadName}
+            setNewRoadName={setNewRoadName}
+          />
+          <WorkOrderTable
+            workOrders={workOrders}
+            deleteWorkOrder={deleteWorkOrder}
+          />
+        </Container>
+      </Box>
     </Box>
   );
 }
