@@ -110,7 +110,15 @@ const App = () => {
           </Toolbar>
         </AppBar>
         {/* Remove the margin-left from Container and adjust width */}
-        <Container sx={{ p: 3 }}> {/* Just use padding */}
+        <Container
+          maxWidth={false}  // This allows full width
+          sx={{
+            px: 3,  // Padding left and right
+            pt: 3,  // Padding top
+            pb: 3,  // Padding bottom
+            marginLeft: '20px'  // Space from sidebar
+          }}
+        >
           <Notification message={notification} type={notificationType} />
           <WorkOrderForm
             addWorkOrder={addWorkOrder}
